@@ -59,6 +59,16 @@ class Service
      */
     private $comments;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $Latitude;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $Longitude;
+
     public function __construct()
     {
         $this->Photos = new ArrayCollection();
@@ -230,6 +240,30 @@ class Service
                 $comment->setForService(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLatitude(): ?string
+    {
+        return $this->Latitude;
+    }
+
+    public function setLatitude(string $Latitude): self
+    {
+        $this->Latitude = $Latitude;
+
+        return $this;
+    }
+
+    public function getLongitude(): ?string
+    {
+        return $this->Longitude;
+    }
+
+    public function setLongitude(string $Longitude): self
+    {
+        $this->Longitude = $Longitude;
 
         return $this;
     }

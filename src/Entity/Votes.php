@@ -27,6 +27,11 @@ class Votes
      */
     private $service;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="votes")
+     */
+    private $Iduser;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +57,18 @@ class Votes
     public function setService(?Service $service): self
     {
         $this->service = $service;
+
+        return $this;
+    }
+
+    public function getIduser(): ?User
+    {
+        return $this->Iduser;
+    }
+
+    public function setIduser(?User $Iduser): self
+    {
+        $this->Iduser = $Iduser;
 
         return $this;
     }
