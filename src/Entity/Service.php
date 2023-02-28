@@ -69,6 +69,11 @@ class Service
      */
     private $Longitude;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $State;
+
     public function __construct()
     {
         $this->Photos = new ArrayCollection();
@@ -264,6 +269,18 @@ class Service
     public function setLongitude(string $Longitude): self
     {
         $this->Longitude = $Longitude;
+
+        return $this;
+    }
+
+    public function isState(): ?bool
+    {
+        return $this->State;
+    }
+
+    public function setState(bool $State): self
+    {
+        $this->State = $State;
 
         return $this;
     }
