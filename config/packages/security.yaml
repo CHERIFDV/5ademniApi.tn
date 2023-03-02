@@ -15,6 +15,7 @@ security:
                 - bcrypt # uses the "bcrypt" hasher with the default options
                 - legacy # uses the "legacy" hasher configured above
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+
     providers:
         # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
@@ -23,25 +24,25 @@ security:
                 property: email
         # used to reload user from session & other features (e.g. switch_user)
     firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-        main:
-            lazy: true
-            provider: app_user_provider
+        login:
+            pattern:  ^/api/login
+            stateless: true
+            json_login:
+                check_path: /api/login
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
+        api:
+            pattern: ^/api
+            stateless: true
+            jwt: ~
 
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
 
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
     access_control:
-        #token_handler: App\Security\AccessTokenHandler
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/Register, roles: PUBLIC_ACCESS }
+        - { path: ^/api/, roles: IS_AUTHENTICATED_FULLY }
+
 
 when@test:
     security:

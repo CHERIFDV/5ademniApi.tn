@@ -82,21 +82,7 @@ class UserController extends AbstractController
       
       
         $user = $serializer->deserialize($request->getContent(), User::class, 'json');
-        /*/$user= new User();
-        $user->setEmail("cherif@gmail.com");
-        $user->setRoles(["cvbcvb"]);
-
-        $user->setPassword("vcbcvb");
-
-        $user->setFirstName("cvbcvb");
-
-        $user->setLastName("vbcvb");
-
-        $user->setTel("1542453");
-
-        $user->setBio("gbfcgfd");
-
-        $user->setTypeProfile(true);/*/
+       
       
 
 
@@ -105,7 +91,7 @@ class UserController extends AbstractController
 
 
 
-        $plaintextPassword = "fdgdfg";
+        $plaintextPassword = $user->getPassword();
 
         // hash the password (based on the security.yaml config for the $user class)
         $hashedPassword = $passwordHasher->hashPassword(
@@ -116,7 +102,7 @@ class UserController extends AbstractController
         $em->persist($user);
         $em->flush();
 
-        $jsonBook = $serializer->serialize($user, 'json', ['groups' => 'getBooks']);
+        $jsonBook = $serializer->serialize($plaintextPassword, 'json', ['groups' => 'getBooks']);
         
        
 

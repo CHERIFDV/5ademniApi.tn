@@ -23,6 +23,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     /**
+     * @ORM\Column(type="string", unique=true, nullable=true)
+     */
+     private $apiToken;
+     
+    /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $email;
@@ -77,6 +82,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OneToMany(targetEntity=Votes::class, mappedBy="Iduser")
      */
     private $votes;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $username;
 
     public function __construct()
     {
@@ -320,6 +330,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $vote->setIduser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
 
         return $this;
     }

@@ -1,3 +1,12 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+api_login_check:
+    path: /api/login
+index:
+   path: /Register
+   controller: App\Controller\UserController::newuserapi
+
+getallusers:
+   path: /api/getallusers
+   controller: App\Controller\UserController::getall
