@@ -75,24 +75,12 @@ class UserController extends AbstractController
      /**
      * @Route("/new_user_api", name="app_user_new_user_api", methods={"GET", "POST"})
      */
-    public function newuserapi(Request $request, UserRepository $userRepository, ManagerRegistry $doctrine,SerializerInterface $serializer,UserPasswordHasherInterface $passwordHasher ):JsonResponse
+    public function new_user_api(Request $request, UserRepository $userRepository, ManagerRegistry $doctrine,SerializerInterface $serializer,UserPasswordHasherInterface $passwordHasher ):JsonResponse
     {
       
         $em = $doctrine->getManager();
-      
-      
         $user = $serializer->deserialize($request->getContent(), User::class, 'json');
-       
-      
-
-
-
-
-
-
-
         $plaintextPassword = $user->getPassword();
-
         // hash the password (based on the security.yaml config for the $user class)
         $hashedPassword = $passwordHasher->hashPassword(
             $user,
@@ -109,40 +97,54 @@ class UserController extends AbstractController
         return new JsonResponse($jsonBook, Response::HTTP_CREATED, [], true);
     }
 
+
     /**
      * @Route("/{id}", name="app_user_show", methods={"GET"})
      */
-    public function show(User $user): Response
+    public function show(User $user,SerializerInterface $serializer): Response
     {
-        return $this->render('user/show.html.twig', [
-            'user' => $user,
-        ]);
+        $jsonBookList = $serializer->serialize($this->getUser(), 'json');
+        return new JsonResponse($jsonBookList, Response::HTTP_OK, [], true); 
     }
+
+
+
+    
 
     /**
-     * @Route("/{id}/edit", name="app_user_edit", methods={"GET", "POST"})
+     * @Route("/edit", name="app_user_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, User $user, UserRepository $userRepository): Response
+    public function edit_user_api(Request $request, UserRepository $userRepository,ManagerRegistry $doctrine,SerializerInterface $serializer): JsonResponse
     {
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
+        $entityManager = $doctrine->getManager();
+        $newuser = $serializer->deserialize($request->getContent(), User::class, 'json');
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $userRepository->add($user, true);
+        $user = $entityManager->getRepository(User::class)->find($this->getUser()->getId());
 
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
-        }
+        $newuser->getEmail()!=""&&$user->setEmail($newuser->getEmail());
+        $newuser->getLastName()!=""&&$user->setLastName($newuser->getLastName());
+        $newuser->getFirstName()!=""&&$user->setFirstName($newuser->getFirstName());
+        $newuser->getTel()!=""&&$user->setTel($newuser->getTel());
+        $newuser->getBio()!=""&&$user->setBio($newuser->getBio());
+        $newuser->isTypeProfile()!=""&&$user->setTypeProfile($newuser->isTypeProfile());
 
-        return $this->renderForm('user/edit.html.twig', [
-            'user' => $user,
-            'form' => $form,
-        ]);
+        
+        $entityManager->flush();
+
+        $jsonBook = $serializer->serialize($newuser, 'json', ['groups' => 'getBooks']);
+        
+       
+
+        return new JsonResponse($jsonBook, Response::HTTP_CREATED, [], true);
     }
+
+
+
 
     /**
      * @Route("/{id}", name="app_user_delete", methods={"POST"})
      */
-    public function delete(Request $request, User $user, UserRepository $userRepository): Response
+    public function delete_user_api(Request $request, User $user, UserRepository $userRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
             $userRepository->remove($user, true);

@@ -83,10 +83,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $votes;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $username;
 
     public function __construct()
     {
@@ -334,10 +330,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function setUsername(string $username): self
-    {
-        $this->username = $username;
-
-        return $this;
-    }
+    
 }

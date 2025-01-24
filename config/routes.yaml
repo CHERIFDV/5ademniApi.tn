@@ -3,7 +3,8 @@
 #    controller: App\Controller\DefaultController::index
 api_login_check:
     path: /api/login
-index:
+    
+Register:
    path: /Register
    controller: App\Controller\UserController::newuserapi
 
